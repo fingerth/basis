@@ -32,7 +32,7 @@ object Shared {
             Long::class.java -> shared?.getLong(key, (def ?: 0) as Long) as T
             Float::class.java -> shared?.getFloat(key, (def ?: 0) as Float) as T
             Boolean::class.java -> shared?.getBoolean(key, (def ?: false) as Boolean) as T
-            else -> null
+            else -> def
         }
     }
 }

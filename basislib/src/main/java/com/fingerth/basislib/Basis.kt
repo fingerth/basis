@@ -28,7 +28,6 @@ import kotlin.collections.ArrayList
 infix fun View.click(block: () -> Unit) = setOnClickListener { block() }
 infix fun TabLayout.setup(vp: ViewPager) = setupWithViewPager(vp)
 infix fun Window.alpha(a: Float) = run { this.attributes = this.attributes.apply { alpha = a } }
-infix fun Log.log(str: String) = Log.v("fingerth", str)
 fun String.showToast(context: Context, duration: Int = Toast.LENGTH_SHORT) =
     Toast.makeText(context, this, duration).show()
 

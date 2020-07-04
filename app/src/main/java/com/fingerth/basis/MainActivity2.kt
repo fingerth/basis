@@ -1,18 +1,16 @@
 package com.fingerth.basis
 
-import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import android.os.Bundle
 import com.fingerth.basislib.Shared
 import com.fingerth.basislib.click
 import com.fingerth.basislib.ktStartActivity
-import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.android.synthetic.main.activity_main2.*
 
-class MainActivity : AppCompatActivity() {
+class MainActivity2 : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
-        button1 click { ktStartActivity<MainActivity2>(this) }
+        setContentView(R.layout.activity_main2)
 
-        Shared.put(this, "123", "123")
     }
 }
