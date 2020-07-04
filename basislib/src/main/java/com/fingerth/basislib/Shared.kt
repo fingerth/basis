@@ -5,13 +5,10 @@ import android.content.SharedPreferences
 
 
 object Shared {
-    const val data_shared_str = "sharedpreferences_name"
+    private const val data_shared_str = "sharedpreferences_name"
     var shared: SharedPreferences? = null
     fun put(con: Context, key: String, any: Any) {
-        if (shared == null) {
-            shared = con.getSharedPreferences(data_shared_str, Context.MODE_PRIVATE)
-        }
-        shared?.put {
+        getShared(con).put {
             when (any) {
                 is String -> putString(key, any)
                 is Int -> putInt(key, any)
@@ -22,17 +19,32 @@ object Shared {
         }
     }
 
-    inline fun <reified T : Comparable<T>> get(con: Context, key: String, def: T? = null): T? {
+    fun getString(con: Context, key: String, def: String = ""): String {
+        return getShared(con).getString(key, def) ?: def
+    }
+
+    fun getInt(con: Context, key: String, def: Int = 0): Int {
+        return getShared(con).getInt(key, def)
+    }
+
+    fun getLong(con: Context, key: String, def: Long = 0): Long {
+        return getShared(con).getLong(key, def)
+    }
+
+    fun getFloat(con: Context, key: String, def: Float = 0f): Float {
+        return getShared(con).getFloat(key, def)
+    }
+
+    fun getBoolean(con: Context, key: String, def: Boolean = false): Boolean {
+        return getShared(con).getBoolean(key, def)
+    }
+
+
+    private fun getShared(con: Context): SharedPreferences {
         if (shared == null) {
             shared = con.getSharedPreferences(data_shared_str, Context.MODE_PRIVATE)
         }
-        return when (T::class.java) {
-            String::class.java -> shared?.getString(key, def?.toString() ?: "") as T
-            Int::class.java -> shared?.getInt(key, (def ?: 0) as Int) as T
-            Long::class.java -> shared?.getLong(key, (def ?: 0) as Long) as T
-            Float::class.java -> shared?.getFloat(key, (def ?: 0) as Float) as T
-            Boolean::class.java -> shared?.getBoolean(key, (def ?: false) as Boolean) as T
-            else -> def
-        }
+        return shared!!
     }
+
 }
