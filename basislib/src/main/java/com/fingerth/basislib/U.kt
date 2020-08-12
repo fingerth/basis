@@ -37,6 +37,39 @@ fun SharedPreferences.put(block: SharedPreferences.Editor.() -> Unit) {
     editor.apply()
 }
 
+private var <T : View>T.triggerLastTime: Long
+    get() = if (getTag(R.id.triggerLastTimeKey) != null) getTag(R.id.triggerLastTimeKey) as Long else 0
+    set(value) {
+        setTag(R.id.triggerLastTimeKey, value)
+    }
+
+
+private var <T : View> T.triggerDelay: Long
+    get() = if (getTag(R.id.triggerDelayKey) != null) getTag(R.id.triggerDelayKey) as Long else -1
+    set(value) {
+        setTag(R.id.triggerDelayKey, value)
+    }
+
+private fun <T : View> T.clickEnable(): Boolean {
+    var clickable = false
+    val currentClickTime = System.currentTimeMillis()
+    if (currentClickTime - triggerLastTime >= triggerDelay) {
+        clickable = true
+    }
+    triggerLastTime = currentClickTime
+    return clickable
+}
+
+fun <T : View> T.clickWithTrigger(delay: Long = 800, block: (T) -> Unit) {
+    triggerDelay = delay
+    setOnClickListener {
+        if (clickEnable()) {
+            block(this)
+        }
+    }
+}
+
+
 
 //switch
 fun dp2px(context: Context, dp: Float): Int =
@@ -182,4 +215,16 @@ fun formatAddressStr(province: String?, city: String?): String {
 
     return address
 }
+
+fun <T> eqx(e: List<T>, q: List<T>): List<Int> {
+    val l = ArrayList<Int>()
+    for ((index, i) in e.withIndex()) {
+        if (q.size > index && i != q[index]) {
+            l.add(index)
+        }
+    }
+    return l
+}
+
+
 
