@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="oval">
+
+    <solid android:color="#ff316c" />
+
+<!--    //shape selector-->
+<!--    //line,oval,rectangle,ring-->
+<!--    //solid -> corners(tblf) ->-->
+<!--    //shape_rectangle__white_f4__5dp-->
+<!--    //shape_selector__1__white_f4__5dp__2__white_f4__5dp-->
+<!--    shape_oval_ff316c-->
+
+</shape>
