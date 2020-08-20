@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<MotionScene xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <ConstraintSet android:id="@+id/start">
+        <Constraint
+            android:id="@+id/ball"
+            android:layout_width="45dp"
+            android:layout_height="45dp"
+            android:layout_marginBottom="30dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+        <Constraint
+            android:id="@+id/tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:alpha="0.0"
+            app:layout_constraintLeft_toLeftOf="@+id/ball"
+            app:layout_constraintTop_toBottomOf="@+id/ball" />
+    </ConstraintSet>
+
+    <ConstraintSet android:id="@+id/end">
+        <Constraint
+            android:id="@+id/ball"
+            android:layout_width="45dp"
+            android:layout_height="45dp"
+            android:layout_marginBottom="30dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintRight_toRightOf="parent" />
+        <Constraint
+            android:id="@+id/tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:alpha="1.0"
+            app:layout_constraintRight_toLeftOf="@+id/ball"
+            app:layout_constraintTop_toBottomOf="@+id/ball" />
+    </ConstraintSet>
+
+    <Transition
+        app:constraintSetEnd="@+id/end"
+        app:constraintSetStart="@+id/start"
+        app:duration="2000">
+        <KeyFrameSet>
+            <KeyPosition
+                app:framePosition="50"
+                app:keyPositionType="parentRelative"
+                app:motionTarget="@+id/ball"
+                app:percentY="0.5" />
+            <KeyAttribute
+                android:rotation="360"
+                android:scaleX="2"
+                android:scaleY="2"
+                app:framePosition="50"
+                app:motionTarget="@+id/ball" />
+            <KeyAttribute
+                android:rotation="720"
+                app:framePosition="100"
+                app:motionTarget="@+id/ball" />
+            <KeyAttribute
+                android:alpha="0.0"
+                app:framePosition="85"
+                app:motionTarget="@+id/tv" />
+        </KeyFrameSet>
+
+                <OnClick
+                    app:clickAction="transitionToEnd"
+                    app:targetId="@+id/ball" />
+<!--        <OnSwipe-->
+<!--            app:dragDirection="dragRight"-->
+<!--            app:touchAnchorId="@+id/ball"-->
+<!--            app:touchAnchorSide="bottom" />-->
+    </Transition>
+</MotionScene>

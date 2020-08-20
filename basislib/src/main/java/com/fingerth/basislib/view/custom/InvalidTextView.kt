@@ -17,6 +17,7 @@ class InvalidTextView @JvmOverloads constructor(con: Context, attrs: AttributeSe
 
     override fun onDraw(canvas: Canvas?) {
         super.onDraw(canvas)
+
         canvas?.drawLine(0f, height / 2f, width.toFloat(), height / 2f, mPaint)
     }
 }

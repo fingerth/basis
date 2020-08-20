@@ -4,10 +4,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    app:layoutDescription="@xml/activity_main2_scene"
-    app:motionDebug="SHOW_PATH"
-    tools:context=".MainActivity2">
+    app:layoutDescription="@xml/activity_motion_layout2_scene"
+    tools:context=".MotionLayout2Activity">
+
 
     <ImageView
         android:id="@+id/ball"
@@ -15,5 +14,10 @@
         android:layout_height="wrap_content"
         android:src="@drawable/ball" />
 
+    <TextView
+        android:id="@+id/tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="蔡徐坤打篮球" />
 
 </androidx.constraintlayout.motion.widget.MotionLayout>

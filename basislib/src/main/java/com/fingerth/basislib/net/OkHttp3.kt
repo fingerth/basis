@@ -30,7 +30,7 @@ object OkHttp3 {
 
     inline fun <reified T> rxPost(url: String, map: Map<String, String>, crossinline errorBlock: () -> Unit = {}, crossinline successBlock: (T) -> Unit): Disposable = rxMethod(1, url, map, null, errorBlock, successBlock)
 
-    inline fun <reified T> rxPost(url: String, body: Any?, crossinline errorBlock: () -> Unit = {}, crossinline successBlock: (T) -> Unit): Disposable = rxMethod(2, url, null, body, errorBlock, successBlock)
+    inline fun <reified T> rxPostByBody(url: String, body: Any?, crossinline errorBlock: () -> Unit = {}, crossinline successBlock: (T) -> Unit): Disposable = rxMethod(2, url, null, body, errorBlock, successBlock)
 
     inline fun <reified T> rxMethod(method: Int, url: String, map: Map<String, String>?, body: Any?, crossinline errorBlock: () -> Unit = {},
                                     crossinline successBlock: (T) -> Unit): Disposable {

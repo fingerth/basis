@@ -17,7 +17,7 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
         Glide.with(this).load(pic).into(banner)
         card1 click {
-
+            ktStartActivity<MotionLayout2Activity>(this)
         }
     }
 
