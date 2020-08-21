@@ -4,17 +4,19 @@ import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.*
 import android.graphics.Bitmap
+import android.graphics.drawable.Drawable
 import android.net.Uri
 import android.os.Bundle
 import android.os.Looper
 import android.provider.MediaStore
-import android.util.Log
 import android.util.TypedValue
 import android.view.View
 import android.view.Window
 import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
 import android.widget.Toast
+import androidx.appcompat.content.res.AppCompatResources
+import androidx.core.graphics.drawable.DrawableCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.viewpager.widget.ViewPager
@@ -25,11 +27,25 @@ import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.collections.ArrayList
 
+
+fun String.showToast(context: Context, duration: Int = Toast.LENGTH_SHORT) = Toast.makeText(context, this, duration).show()
+
+/**
+ * 特殊字符处理
+ */
+fun String.withSpecialCharacters(): String {
+    val map = mutableMapOf("&lt;" to "<", "&gt;" to ">", "&amp;" to "&", "&quot;" to "\"", "&copy;" to "©", "&yen;" to "¥", "&divide;" to "÷", "&times;" to "×", "&reg;" to "®", "&sect;" to "§", "&pound;" to "£", "&cent;" to "￠")
+    map.forEach {
+        replace(it.key.toRegex(), it.value)
+    }
+    return this
+}
+
+
 infix fun View.click(block: () -> Unit) = setOnClickListener { block() }
 infix fun TabLayout.setup(vp: ViewPager) = setupWithViewPager(vp)
 infix fun Window.alpha(a: Float) = run { this.attributes = this.attributes.apply { alpha = a } }
-fun String.showToast(context: Context, duration: Int = Toast.LENGTH_SHORT) =
-    Toast.makeText(context, this, duration).show()
+
 
 fun SharedPreferences.put(block: SharedPreferences.Editor.() -> Unit) {
     val editor = edit()
@@ -70,22 +86,17 @@ fun <T : View> T.clickWithTrigger(delay: Long = 800, block: (T) -> Unit) {
 }
 
 
-
 //switch
-fun dp2px(context: Context, dp: Float): Int =
-    TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp, context.resources.displayMetrics)
-        .toInt()
+fun dp2px(context: Context, dp: Float): Int = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp, context.resources.displayMetrics).toInt()
 
-fun px2dp(context: Context, pxValue: Float): Int =
-    (pxValue / context.resources.displayMetrics.density + 0.5f).toInt()
+fun px2dp(context: Context, pxValue: Float): Int = (pxValue / context.resources.displayMetrics.density + 0.5f).toInt()
 
 //format
 @SuppressLint("SimpleDateFormat")
 fun formatData(date: Date): String = SimpleDateFormat("yyyy-MM-dd HH:mm").format(date)
 
-@SuppressLint("SimpleDateFormat")//获取系统时间
-fun getSystemTime(): String =
-    SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(Date(System.currentTimeMillis()))
+@SuppressLint("SimpleDateFormat") //获取系统时间
+fun getSystemTime(): String = SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(Date(System.currentTimeMillis()))
 
 //UI
 inline fun <reified T : Activity> ktStartActivity(context: Context) {
@@ -99,28 +110,23 @@ inline fun <reified T : Activity> ktStartActivity(context: Context, block: Inten
     context.startActivity(intent)
 }
 
-fun startPhotoZoom(
-    activity: Activity?,
-    code: Int,
-    uri: Uri?,
-    outputX: Int = 400,
-    outputY: Int = 400,
-    tempFile: File
-) {
+fun startPhotoZoom(activity: Activity?, code: Int, uri: Uri?, outputX: Int = 400, outputY: Int = 400, tempFile: File) {
+    val x = S.getSysWidth(activity)
+    val y = x * outputY / outputX
     val intent = Intent("com.android.camera.action.CROP").apply {
         setDataAndType(uri, "image/*")
         // crop为true是设置在开启的intent中设置显示的view可以剪裁
         putExtra("crop", "true")
         // aspectX aspectY 是宽高的比例
-        putExtra("aspectX", outputX)
-        putExtra("aspectY", outputY)
+        putExtra("aspectX", x)
+        putExtra("aspectY", y)
         // outputX,outputY 是剪裁图片的宽高
         putExtra("outputX", outputX)
         putExtra("outputY", outputY)
         putExtra("scale", true) //是否保存比例
         putExtra("return-data", false) //剪裁是否返回bitmap
         putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(tempFile))
-        putExtra("outputFormat", Bitmap.CompressFormat.JPEG.toString())
+        putExtra("outputFormat", Bitmap.CompressFormat.PNG.toString())
     }
     activity?.startActivityForResult(intent, code)
 }
@@ -132,17 +138,7 @@ fun <T : Fragment> newFrag(frag: T, block: Bundle.() -> Unit): T {
     return frag
 }
 
-fun showFragment(
-    tabLayout: TabLayout,
-    viewPager: ViewPager,
-    manager: FragmentManager,
-    titles: List<String>,
-    isCustomView: Boolean = false,
-    mode: Int = TabLayout.MODE_FIXED,
-    getTabView: (Int) -> View? = { null },
-    changeTabSelect: (TabLayout.Tab?) -> Unit = {},
-    addFragBlack: ArrayList<Fragment>.() -> Unit
-) {
+fun showFragment(tabLayout: TabLayout, viewPager: ViewPager, manager: FragmentManager, titles: List<String>, isCustomView: Boolean = false, mode: Int = TabLayout.MODE_FIXED, getTabView: (Int) -> View? = { null }, changeTabSelect: (TabLayout.Tab?) -> Unit = {}, addFragBlack: ArrayList<Fragment>.() -> Unit) {
     val listFrag = ArrayList<Fragment>()
     listFrag.addFragBlack()
     viewPager.adapter = CommonFragmentPagerAdapter(manager, listFrag, titles.toTypedArray())
@@ -187,8 +183,7 @@ fun getDateAfter(d: Date, day: Int): Date = Calendar.getInstance().run {
 }
 
 fun hideKeyboard(act: Activity) {
-    val imm: InputMethodManager =
-        act.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+    val imm: InputMethodManager = act.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
     // 隐藏软键盘
     imm.hideSoftInputFromWindow(act.window.decorView.windowToken, 0)
 }
@@ -201,8 +196,7 @@ fun hideKeyboard(vararg et: EditText) {
             focusEt = e
         }
     }
-    val imm: InputMethodManager =
-        focusEt.context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+    val imm: InputMethodManager = focusEt.context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
     // 隐藏软键盘
     imm.hideSoftInputFromWindow(focusEt.windowToken, 0)
 }
@@ -226,5 +220,11 @@ fun <T> eqx(e: List<T>, q: List<T>): List<Int> {
     return l
 }
 
-
+fun iconC(context: Context, res: Int, c: Int): Drawable? {
+    val icon: Drawable? = AppCompatResources.getDrawable(context, res)
+    icon?.let {
+        DrawableCompat.setTint(icon, c)
+    }
+    return icon
+}
 
