@@ -13,7 +13,6 @@ import java.lang.ref.WeakReference
 
 class WebSet {
     private var web: WeakReference<WebView>? = null
-
     fun showHtml(h: String?) {
         web?.get()?.let {
             it.loadDataWithBaseURL("http://www.xxx.com", Jsoup.parse(parseBodyDocument(h), "http://www.xxx.com").run {
