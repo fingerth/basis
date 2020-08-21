@@ -28,6 +28,16 @@ import java.util.*
 import kotlin.collections.ArrayList
 
 
+//shape selector
+//line,oval,rectangle,ring
+//solid -> corners(tblf) ->
+//shape_rectangle__white_f4__50dp
+//shape_rectangle__white_f4__50dp
+//shape_selector__1__white_f4__5dp__2__white_f4__5dp
+//private val icno = intArrayOf(R.drawable.ycyz_my_doctor, R.drawable.jkb_doctor, R.drawable.internet_hospital, R.drawable.other_doctor)
+//private val icno_selector = intArrayOf(R.drawable.ycyz_my_doctor_selector, R.drawable.jkb_doctor_select, R.drawable.internet_hospital_selector, R.drawable.other_doctor_select)
+//shape_rectangle_white_50dp
+//selector_rectangle__1__selected_true__them_color__2dp__2__selected_false__white_b4__2dp
 fun String.showToast(context: Context, duration: Int = Toast.LENGTH_SHORT) = Toast.makeText(context, this, duration).show()
 
 /**
