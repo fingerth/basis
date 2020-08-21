@@ -7,26 +7,27 @@ import android.webkit.SslErrorHandler
 import android.webkit.WebSettings
 import android.webkit.WebView
 import android.webkit.WebViewClient
+import org.jsoup.Jsoup
 import java.lang.ref.WeakReference
 
 class WebSet {
     private var web: WeakReference<WebView>? = null
 
+    /**
+     * 先处理body片断。
+     * 然后图片加上BaseUrl，用Jsoup来解析Html格式的文字。
+     * Jsoup学习路径：https://www.open-open.com/jsoup/
+     */
     fun showHtml(h: String?) {
         web?.get()?.let {
-            val h2 = htmlEscapeCharsToString(h)
-            val html = ("<html>"
-                    + "<head>"
-                    + "<style type='text/css'>"
-                    + "img{width:100% !important;height:auto !important}"
-                    + "body,div,td,th{font-size: 1em;line-height: 2.3em;}"
-                    + "</style>" + "<meta name='viewport' " +
-                    "content='width=device-width,initial-scale=1," +
-                    "minimum-scale=1,maximum-scale=1,user-scalable=no'> </head>"
-                    + "<body style=\"padding: 10px;\" >" + h2
-                    + "</body>" + "</html>")
-            it.loadDataWithBaseURL("", html, "text/html", "utf-8", null)
-    }
+            it.loadDataWithBaseURL("http://www.xxx.com", Jsoup.parse(parseBodyDocument(h), "http://www.xxx.com").run {
+                for (el in select("img")) {
+                    //图片相对路径 -> abs: 拼上baseUrl
+                    el.attr("src", el.attr("abs:src"))
+                }
+                outerHtml()
+            }, "text/html", "utf-8", null)
+        }
     }
 
 
@@ -38,7 +39,7 @@ class WebSet {
             javaScriptEnabled = true
             cacheMode = WebSettings.LOAD_NO_CACHE
             setSupportZoom(true)
-//            builtInZoomControls = true//设置出现缩放工具
+            //            builtInZoomControls = true//设置出现缩放工具
             useWideViewPort = true
             layoutAlgorithm = WebSettings.LayoutAlgorithm.SINGLE_COLUMN
             loadWithOverviewMode = true
@@ -74,26 +75,29 @@ class WebSet {
         }
     }
 
-//    private class MyWebChromeClient : WebChromeClient() {
-//        override fun onProgressChanged(view: WebView?, newProgress: Int) {
-//            super.onProgressChanged(view, newProgress)
-//        }
-//    }
+    //    private class MyWebChromeClient : WebChromeClient() {
+    //        override fun onProgressChanged(view: WebView?, newProgress: Int) {
+    //            super.onProgressChanged(view, newProgress)
+    //        }
+    //    }
 
 
-    //在HTML特殊字符的处理
-    private fun htmlEscapeCharsToString(source: String?): String {
-        return if (source.isNullOrBlank()) "" else source.replace("&lt;".toRegex(), "<")
-                .replace("&gt;".toRegex(), ">")
-                .replace("&amp;".toRegex(), "&")
-                .replace("&quot;".toRegex(), "\"")
-                .replace("&copy;".toRegex(), "©")
-                .replace("&yen;".toRegex(), "¥")
-                .replace("&divide;".toRegex(), "÷")
-                .replace("&times;".toRegex(), "×")
-                .replace("&reg;".toRegex(), "®")
-                .replace("&sect;".toRegex(), "§")
-                .replace("&pound;".toRegex(), "£")
-                .replace("&cent;".toRegex(), "￠")
+    //处理body片断
+    private fun parseBodyDocument(source: String?): String {
+        val doc = if (source.isNullOrBlank()) "" else source.replace("&lt;".toRegex(), "<").replace("&gt;".toRegex(), ">").replace("&amp;".toRegex(), "&").replace("&quot;".toRegex(), "\"").replace("&copy;".toRegex(), "©").replace("&yen;".toRegex(), "¥").replace("&divide;".toRegex(), "÷").replace("&times;".toRegex(), "×").replace("&reg;".toRegex(), "®").replace("&sect;".toRegex(), "§").replace("&pound;".toRegex(), "£").replace("&cent;".toRegex(), "￠")
+        return """  
+                    <html>
+                        <head>
+                            <style type='text/css'>
+                               img{width:100% !important;height:auto !important} 
+                               body,div,td,th{font-size: 1em;line-height: 2.3em;}
+                            </style>
+                            <meta name='viewport' content='width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no'> 
+                        </head>
+                        <body style='padding: 10px;' >
+                            $doc
+                        </body>
+                    </html>
+                """
     }
 }
