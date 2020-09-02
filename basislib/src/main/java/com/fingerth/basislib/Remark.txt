@@ -1,0 +1,16 @@
+1.Glide 与 picasso
+    2016: 1.Default Bitmap Format is RGB_565。   ARGB_8888
+          2.像素细节picasso好。
+          3.缓存，picasso全尺寸。Glide加载尺寸。
+          4.Glide绑定生命周期，显示快。
+          5.Glide支持GIF。
+          6.Glide源码文件大430K， picasso 118K。
+
+
+
+
+
+
+
+
+

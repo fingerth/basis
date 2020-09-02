@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.*
 import android.graphics.Bitmap
+import android.graphics.Path
 import android.graphics.drawable.Drawable
 import android.net.Uri
 import android.os.Bundle
@@ -51,6 +52,14 @@ fun String.withSpecialCharacters(): String {
     return this
 }
 
+/**
+ * Path绘制
+ */
+fun Path.walk(vararg points: Pair<Float, Float>) {
+    reset()
+    repeat(points.count()) { if (it == 0) moveTo(points[it].first, points[it].second) else lineTo(points[it].first, points[it].second) }
+    close()
+}
 
 infix fun View.click(block: () -> Unit) = setOnClickListener { block() }
 infix fun TabLayout.setup(vp: ViewPager) = setupWithViewPager(vp)
@@ -100,6 +109,8 @@ fun <T : View> T.clickWithTrigger(delay: Long = 800, block: (T) -> Unit) {
 fun dp2px(context: Context, dp: Float): Int = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp, context.resources.displayMetrics).toInt()
 
 fun px2dp(context: Context, pxValue: Float): Int = (pxValue / context.resources.displayMetrics.density + 0.5f).toInt()
+fun px2dpFloat(context: Context, pxValue: Float): Float = pxValue / context.resources.displayMetrics.density
+
 
 //format
 @SuppressLint("SimpleDateFormat")
