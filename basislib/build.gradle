@@ -45,4 +45,7 @@ dependencies {
 
     implementation 'org.jsoup:jsoup:1.13.1'
 
+
+    implementation 'com.github.fingerth:commonadapterkt:1.0.1'
+
 }
