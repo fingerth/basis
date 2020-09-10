@@ -34,11 +34,18 @@ class Xadapter<T>(private val con: Context) {
 
     class WithLayout<T>(private val con: Context, private val mData: List<T>,
                         private val type: (T) -> Any = {},
-                        private val list: ArrayList<Pair<Any, Int>>) {
+                        private val list: ArrayList<Pair<Any, Int>>) : CommonRecyclerAdapter.OnItemClickListener<T> {
         private val mapBind = HashMap<Any, (Context, Holder, List<T>, T, Int) -> Unit>()
+        private var clickListener: (Int, T) -> Unit = { _, _ -> }
 
+        //context, holder,mList, bean, p ->
         fun bind(any: Any?, black: (Context, Holder, List<T>, T, Int) -> Unit): WithLayout<T> {
             mapBind[any ?: 1] = black
+            return this
+        }
+
+        fun itemClickListener(listener: (Int, T) -> Unit): WithLayout<T> {
+            this.clickListener = listener
             return this
         }
 
@@ -55,7 +62,12 @@ class Xadapter<T>(private val con: Context) {
                 }
                 return super.itemViewType(p)
             }
-        }
+
+
+        }.apply { setOnItemClickListener(this@WithLayout) }
+
+        override fun onItemClick(p0: Int, p1: T) = clickListener(p0, p1)
+
     }
 
 

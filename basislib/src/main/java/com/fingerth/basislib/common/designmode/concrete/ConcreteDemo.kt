@@ -3,7 +3,7 @@ package com.fingerth.basislib.common.designmode.concrete
 //模板
 //AbstractClass：抽象类，定义了一套算法框架 ；  ConcreteClass:具体实现类
 abstract class AbstractSwordsman {
-    final fun fighting() {
+     fun fighting() {
         //运行内功
         neigong()
         //调整经脉

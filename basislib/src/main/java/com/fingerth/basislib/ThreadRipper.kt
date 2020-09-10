@@ -11,15 +11,7 @@ object ThreadRipper {
      * 消耗完内存或者“过度切换”的问题。另外创建匿名线程不便于后续的资源使用分析，对性能分析等会造成困扰。
      *
      */
-    fun getThreadPool(run: () -> Unit) {
-        val executorService: ExecutorService = ThreadPoolExecutor(
-            Runtime.getRuntime().availableProcessors(),
-            Runtime.getRuntime().availableProcessors() * 2,
-            1, TimeUnit.SECONDS, LinkedBlockingQueue(),
-            RejectedExecutionHandler { _, _ -> Thread { run() }.start() })
-        //执行任务
-        executorService.execute { run() }
-    }
+    fun getThreadPool(run: () -> Unit) = ThreadPoolExecutor(Runtime.getRuntime().availableProcessors(), Runtime.getRuntime().availableProcessors() * 2, 1, TimeUnit.SECONDS, LinkedBlockingQueue(), RejectedExecutionHandler { _, _ -> Thread { run() }.start() }).apply { execute { run() } }
 
 
 }
