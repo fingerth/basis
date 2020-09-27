@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <color name="trans">#00000000</color>
+    <!-- 白色 -->
+    <color name="white">#ffffff</color>
+    <color name="white_f1">#ff1f1f1f</color>
+    <color name="white_f4">#f4f4f4</color>
+    <color name="white_ed">#ededed</color>
+    <color name="white_dd">#dddddd</color>
+    <color name="white_c8">#c8c8c8</color>
+    <color name="white_b4">#b4b4b4</color>
+    <color name="white_9c">#9c9c9c</color>
+
+    <!-- 灰色 -->
+    <color name="gray">#808080</color>
+    <color name="gray_88">#888888</color>
+    <!-- 黑色 -->
+    <color name="black">#000000</color>
+    <color name="black_33">#333333</color>
+    <color name="black_4f">#4f4f4f</color>
+</resources>
